@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Panel</title>
+    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .admin-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .admin-tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .admin-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        .admin-content {
+            display: none;
+        }
+        .admin-content.active {
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 10px;
+        }
+        .data-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .table-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .table-content {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        .link-generator {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .copy-btn {
+            background: #17a2b8;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Navigation Header -->
+        <div style="margin-bottom: 20px;">
+            <a href="portfolio.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-arrow-left"></i>
+                Back to Portfolio
+            </a>
+            <a href="dashboard.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #17a2b8; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; margin-left: 10px;">
+                <i class="fas fa-chart-line"></i>
+                Analytics Dashboard
+            </a>
+        </div>
+
+        <div class="admin-header">
+            <h1><i class="fas fa-cogs"></i> Portfolio Admin Panel</h1>
+            <p>Manage your portfolio backend and analytics</p>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="showTab('overview')">
+                <i class="fas fa-chart-bar"></i> Overview
+            </button>
+            <button class="admin-tab" onclick="showTab('links')">
+                <i class="fas fa-link"></i> Generated Links
+            </button>
+            <button class="admin-tab" onclick="showTab('messages')">
+                <i class="fas fa-envelope"></i> Contact Messages
+            </button>
+            <button class="admin-tab" onclick="showTab('generator')">
+                <i class="fas fa-plus"></i> Generate Link
+            </button>
+            <a href="dashboard.html" class="admin-tab" style="text-decoration: none; color: inherit;">
+                <i class="fas fa-chart-line"></i> Analytics Dashboard
+            </a>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="admin-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalLinks">-</span>
+                    <div class="stat-label">Total Links Generated</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalClicks">-</span>
+                    <div class="stat-label">Total Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalMessages">-</span>
+                    <div class="stat-label">Contact Messages</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="activeLinks">-</span>
+                    <div class="stat-label">Active Links</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Links Tab -->
+        <div id="links" class="admin-content">
+            <div class="data-table">
+                <div class="table-header">
+                    <h3><i class="fas fa-link"></i> Generated Links</h3>
+                </div>
+                <div class="table-content">
+                    <div id="linksLoading" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading links...
+                    </div>
+                    <table id="linksTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Type</th>
+                                <th>Generated URL</th>
+                                <th>Clicks</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linksTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Messages Tab -->
+        <div id="messages" class="admin-content">
+            <div class="data-table">
+                <div class="table-header">
+                    <h3><i class="fas fa-envelope"></i> Contact Messages</h3>
+                </div>
+                <div class="table-content">
+                    <div id="messagesLoading" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading messages...
+                    </div>
+                    <table id="messagesTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Link Generator Tab -->
+        <div id="generator" class="admin-content">
+            <div class="link-generator">
+                <h3><i class="fas fa-plus"></i> Generate New Link</h3>
+                <form id="linkGeneratorForm">
+                    <div class="form-group">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectName" name="projectName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectType">Project Type *</label>
+                        <select id="projectType" name="projectType" required>
+                            <option value="">Select Type</option>
+                            <option value="Data Analysis">Data Analysis</option>
+                            <option value="Machine Learning">Machine Learning</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Visualization">Visualization</option>
+                            <option value="Research">Research</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="originalUrl">Original URL (Optional)</label>
+                        <input type="url" id="originalUrl" name="originalUrl" placeholder="https://example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Brief description of the project..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expiresInDays">Expires In (Days)</label>
+                        <input type="number" id="expiresInDays" name="expiresInDays" min="1" max="365" placeholder="Leave empty for no expiration">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-magic"></i> Generate Link
+                    </button>
+                </form>
+                
+                <div id="generatedLinkResult" style="display: none; margin-top: 20px; padding: 20px; background: #d4edda; border-radius: 8px;">
+                    <h4>Link Generated Successfully!</h4>
+                    <p><strong>Generated URL:</strong></p>
+                    <div style="background: white; padding: 10px; border-radius: 4px; margin: 10px 0; word-break: break-all;">
+                        <span id="generatedUrl"></span>
+                        <button class="copy-btn" onclick="copyToClipboard('generatedUrl')">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <p><strong>Link ID:</strong> <span id="generatedLinkId"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.admin-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Load data for the tab
+            if (tabName === 'links') {
+                loadLinks();
+            } else if (tabName === 'messages') {
+                loadMessages();
+            } else if (tabName === 'overview') {
+                loadOverview();
+            }
+        }
+
+        // Load overview statistics
+        async function loadOverview() {
+            try {
+                const [linksResponse, messagesResponse] = await Promise.all([
+                    fetch('/api/admin/links'),
+                    fetch('/api/admin/messages')
+                ]);
+                
+                const links = await linksResponse.json();
+                const messages = await messagesResponse.json();
+                
+                const totalLinks = links.length;
+                const totalClicks = links.reduce((sum, link) => sum + (link.total_clicks || 0), 0);
+                const totalMessages = messages.length;
+                const activeLinks = links.filter(link => link.is_active).length;
+                
+                document.getElementById('totalLinks').textContent = totalLinks;
+                document.getElementById('totalClicks').textContent = totalClicks;
+                document.getElementById('totalMessages').textContent = totalMessages;
+                document.getElementById('activeLinks').textContent = activeLinks;
+            } catch (error) {
+                console.error('Error loading overview:', error);
+            }
+        }
+
+        // Load generated links
+        async function loadLinks() {
+            const loading = document.getElementById('linksLoading');
+            const table = document.getElementById('linksTable');
+            const tbody = document.getElementById('linksTableBody');
+            
+            try {
+                const response = await fetch('/api/admin/links');
+                const links = await response.json();
+                
+                loading.style.display = 'none';
+                table.style.display = 'table';
+                
+                tbody.innerHTML = links.map(link => `
+                    <tr>
+                        <td>${link.project_name}</td>
+                        <td>${link.project_type}</td>
+                        <td>
+                            <a href="/api/redirect/${link.link_id}" target="_blank" style="color: #667eea;">
+                                /api/redirect/${link.link_id}
+                            </a>
+                        </td>
+                        <td>${link.total_clicks || 0}</td>
+                        <td>
+                            <span class="status-badge ${link.is_active ? 'status-active' : 'status-expired'}">
+                                ${link.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td>${new Date(link.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-success" onclick="copyToClipboard('${window.location.origin}/api/redirect/${link.link_id}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading links:', error);
+                loading.innerHTML = '<div class="error">Error loading links. Please try again.</div>';
+            }
+        }
+
+        // Load contact messages
+        async function loadMessages() {
+            const loading = document.getElementById('messagesLoading');
+            const table = document.getElementById('messagesTable');
+            const tbody = document.getElementById('messagesTableBody');
+            
+            try {
+                const response = await fetch('/api/admin/messages');
+                const messages = await response.json();
+                
+                loading.style.display = 'none';
+                table.style.display = 'table';
+                
+                tbody.innerHTML = messages.map(message => `
+                    <tr>
+                        <td>${message.name}</td>
+                        <td><a href="mailto:${message.email}">${message.email}</a></td>
+                        <td>${message.subject}</td>
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${message.message}</td>
+                        <td>${new Date(message.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <span class="status-badge ${message.status === 'read' ? 'status-active' : 'status-expired'}">
+                                ${message.status}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                loading.innerHTML = '<div class="error">Error loading messages. Please try again.</div>';
+            }
+        }
+
+        // Link generator form
+        document.getElementById('linkGeneratorForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                projectName: document.getElementById('projectName').value,
+                projectType: document.getElementById('projectType').value,
+                originalUrl: document.getElementById('originalUrl').value,
+                description: document.getElementById('description').value,
+                expiresInDays: document.getElementById('expiresInDays').value || null
+            };
+            
+            try {
+                const response = await fetch('/api/generate-link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('generatedUrl').textContent = result.generatedUrl;
+                    document.getElementById('generatedLinkId').textContent = result.linkId;
+                    document.getElementById('generatedLinkResult').style.display = 'block';
+                    document.getElementById('linkGeneratorForm').reset();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            }
+        });
+
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            if (typeof text === 'string') {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Copied to clipboard!');
+                });
+            } else {
+                const element = document.getElementById(text);
+                navigator.clipboard.writeText(element.textContent).then(() => {
+                    alert('Copied to clipboard!');
+                });
+            }
+        }
+
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOverview();
+        });
+    </script>
+</body>
+</html>

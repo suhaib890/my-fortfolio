@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Modern Website</title>
+    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">SUHAIB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Content -->
+    <div class="content-container">
+        <div class="content-box">
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h1>Get in Touch</h1>
+                    <p class="subtitle">We'd love to hear from you</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Address</h3>
+                                <p>Abul fazal Enclave <br>New Delhi 110025</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>Phone</h3>
+                                <p>91+ 9795478165</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Email</h3>
+                                <p><a href="mailto:suhaibashraf890@gmail.com">suhaibashraf890@gmail.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="input-group">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-button" id="submitBtn">
+                            <span class="btn-text">Send Message →</span>
+                            <span class="btn-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i> Sending...
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <!-- Success/Error Messages -->
+                    <div id="messageStatus" style="display: none; margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center;">
+                        <span id="statusText"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hamburger menu
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+            const messageStatus = document.getElementById('messageStatus');
+            const statusText = document.getElementById('statusText');
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            submitBtn.disabled = true;
+            messageStatus.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Success
+                    messageStatus.style.display = 'block';
+                    messageStatus.style.backgroundColor = '#d4edda';
+                    messageStatus.style.color = '#155724';
+                    messageStatus.style.border = '1px solid #c3e6cb';
+                    statusText.textContent = result.message || 'Message sent successfully!';
+                    
+                    // Reset form
+                    document.getElementById('contactForm').reset();
+                } else {
+                    // Error
+                    messageStatus.style.display = 'block';
+                    messageStatus.style.backgroundColor = '#f8d7da';
+                    messageStatus.style.color = '#721c24';
+                    messageStatus.style.border = '1px solid #f5c6cb';
+                    statusText.textContent = result.error || 'Failed to send message. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageStatus.style.display = 'block';
+                messageStatus.style.backgroundColor = '#f8d7da';
+                messageStatus.style.color = '#721c24';
+                messageStatus.style.border = '1px solid #f5c6cb';
+                statusText.textContent = 'Network error. Please check your connection and try again.';
+            } finally {
+                // Reset button state
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 

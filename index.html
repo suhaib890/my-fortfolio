@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suhaib Ashraf | Data Analyst Portfolio</title>
+    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="description" content="Suhaib Ashraf — Data Analyst & Machine Learning enthusiast. Explore skills, projects, certifications, and get in touch.">
+    <link rel="canonical" href="https://your-domain.com/">
+    <meta property="og:title" content="Suhaib Ashraf Portfolio">
+    <meta property="og:description" content="Data Analyst & Machine Learning enthusiast. Projects, skills, and contact information.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/">
+    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
+    <style>
+        .gradient-animated {
+            background: linear-gradient(90deg, #6c63ff, #8a84ff, #6c63ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% 100%;
+            animation: slideGradient 8s linear infinite;
+        }
+        @keyframes slideGradient {
+            0% { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .typewriter {
+            display: inline-block;
+            border-right: 2px solid rgba(255,255,255,0.8);
+            white-space: nowrap;
+            overflow: hidden;
+            width: 20ch;
+        }
+        .feature-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            color: #fff;
+        }
+        .wave-divider {
+            display: block;
+            line-height: 0;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            .typewriter { width: 18ch; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">SUHAIB</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <div class="hero-content">
+            <h1 class="gradient-animated">Hi, I'm Suhaib</h1>
+            <p class="typewriter" id="typewriter"></p>
+            <div class="hero-actions">
+                <a href="portfolio.html" class="cta-button">View Portfolio</a>
+                <a href="Suhaib_CV.pdf" class="cta-button outline" download>Download CV</a>
+            </div>
+            <div class="social-icons hero-socials">
+                <a href="https://www.linkedin.com/in/suhaib-ashraf01?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/" target="_blank" rel="noopener" class="social-icon" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="feature-strip">
+                <div class="feature-card"><i class="fas fa-database"></i> SQL • Power BI • Excel</div>
+                <div class="feature-card"><i class="fas fa-robot"></i> Machine Learning • scikit‑learn</div>
+                <div class="feature-card"><i class="fas fa-chart-line"></i> Dashboards • Insights</div>
+                <div class="feature-card"><i class="fas fa-envelope"></i> suhaibashraf890@gmail.com</div>
+            </div>
+            <svg class="wave-divider" width="100%" height="60" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="rgba(255,255,255,0.2)"></path>
+            </svg>
+        </div>
+    </main>
+
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        // Typewriter roles
+        (function(){
+            const el = document.getElementById('typewriter');
+            if(!el) return;
+            const roles = [
+                'Data Analyst — turning data into decisions',
+                'Machine Learning Enthusiast',
+                'SQL • Python • Power BI'
+            ];
+            let r = 0, i = 0, typing = true;
+            function tick(){
+                const text = roles[r];
+                if(typing){
+                    i++;
+                    el.textContent = text.slice(0,i);
+                    if(i === text.length){ typing = false; setTimeout(tick, 1000); return; }
+                } else {
+                    i--;
+                    el.textContent = text.slice(0,i);
+                    if(i === 0){ typing = true; r = (r+1)%roles.length; }
+                }
+                setTimeout(tick, typing ? 60 : 30);
+            }
+            tick();
+        })();
+    </script>
+</body>
+</html>
+
